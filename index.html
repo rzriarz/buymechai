@@ -790,7 +790,7 @@
         <span class="app-name">BHIM</span>
       </a>
     </div>
-    <p class="note">App buttons open that app directly (Android). On iPhone, use "Pay via UPI app" or scan the QR.</p>
+    <p class="note">App buttons try to open that app directly. If one doesn't cooperate, scanning the QR or using "Pay via UPI app" always works.</p>
   </div>
 </section>
 
@@ -905,12 +905,16 @@
   });
 
   const isAndroid = /Android/i.test(navigator.userAgent);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+  // iosScheme is best-effort: these app-specific schemes are documented by
+  // developer community sources, not officially guaranteed by each company.
+  // BHIM has no confirmed iOS scheme, so it falls back to the generic link there.
   const APPS = {
-    phonepe: { link: document.getElementById('phonepeLink'), pkg: 'com.phonepe.app' },
-    gpay: { link: document.getElementById('gpayLink'), pkg: 'com.google.android.apps.nbu.paisa.user' },
-    paytm: { link: document.getElementById('paytmLink'), pkg: 'net.one97.paytm' },
-    bhim: { link: document.getElementById('bhimLink'), pkg: 'in.org.npci.upiapp' }
+    phonepe: { link: document.getElementById('phonepeLink'), pkg: 'com.phonepe.app', iosScheme: 'phonepe' },
+    gpay: { link: document.getElementById('gpayLink'), pkg: 'com.google.android.apps.nbu.paisa.user', iosScheme: 'gpay' },
+    paytm: { link: document.getElementById('paytmLink'), pkg: 'net.one97.paytm', iosScheme: 'paytmmp' },
+    bhim: { link: document.getElementById('bhimLink'), pkg: 'in.org.npci.upiapp', iosScheme: null }
   };
 
   function buildUpiUri(amount){
@@ -918,14 +922,22 @@
     return `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${amount}&cu=INR&tn=${note}`;
   }
 
-  // on Android, target the app's package directly via an intent:// link so it
-  // opens that exact app instead of whatever the device's default UPI handler is
-  function buildAppIntentUri(amount, pkg){
+  // Android: target the app's package directly via an intent:// link so it opens
+  // that exact app instead of whatever the device's default UPI handler is.
+  // iOS: try the app's own branded scheme (separate from the shared "upi" scheme
+  // that another app may have claimed), falling back to the generic link.
+  function buildAppUri(amount, app){
     const genericUri = buildUpiUri(amount);
-    if(!isAndroid) return genericUri;
     const params = genericUri.split('?')[1];
-    const fallback = encodeURIComponent(`https://play.google.com/store/apps/details?id=${pkg}`);
-    return `intent://pay?${params}#Intent;scheme=upi;package=${pkg};S.browser_fallback_url=${fallback};end`;
+
+    if(isAndroid){
+      const fallback = encodeURIComponent(`https://play.google.com/store/apps/details?id=${app.pkg}`);
+      return `intent://pay?${params}#Intent;scheme=upi;package=${app.pkg};S.browser_fallback_url=${fallback};end`;
+    }
+    if(isIOS && app.iosScheme){
+      return `${app.iosScheme}://pay?${params}`;
+    }
+    return genericUri;
   }
 
   function setAmount(amount, cardEl, opts = {}){
@@ -935,7 +947,7 @@
     qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(uri)}`;
     payLink.href = uri;
     Object.values(APPS).forEach(app => {
-      app.link.href = buildAppIntentUri(amount, app.pkg);
+      app.link.href = buildAppUri(amount, app);
     });
 
     cards.forEach(c => c.classList.remove('selected'));
