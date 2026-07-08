@@ -447,21 +447,52 @@
   }
   .pay-btn:hover{ transform:translateY(-3px) scale(1.02); }
 
-  .phonepe-btn{
-    background:linear-gradient(135deg, #5f259f, #8a3ffc);
-    box-shadow:0 12px 26px rgba(95,37,159,0.35);
+  .app-row-label{
+    font-size:13px;
+    color:#9c7f60;
+    margin-top:18px;
+    margin-bottom:12px;
   }
 
-  .pay-btn-secondary{
-    display:block;
-    margin-top:12px;
-    font-size:14px;
-    color:var(--chai-dark);
-    text-decoration:underline;
-    opacity:0.8;
-    transition:opacity 0.2s ease;
+  .app-row{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
   }
-  .pay-btn-secondary:hover{ opacity:1; }
+
+  .app-btn{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    width:66px;
+    text-decoration:none;
+  }
+  .app-btn .app-icon{
+    width:50px;
+    height:50px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:18px;
+    color:var(--white);
+    box-shadow:var(--shadow);
+    transition:transform 0.2s ease;
+  }
+  .app-btn:hover .app-icon{ transform:translateY(-4px) scale(1.06); }
+  .app-btn .app-name{
+    font-size:11.5px;
+    color:var(--chai-dark);
+    font-weight:600;
+  }
+  .app-phonepe .app-icon{ background:linear-gradient(135deg,#5f259f,#8a3ffc); }
+  .app-gpay .app-icon{ background:linear-gradient(135deg,#4285F4,#34A853 40%,#FBBC05 70%,#EA4335); }
+  .app-paytm .app-icon{ background:linear-gradient(135deg,#00baf2,#00325a); }
+  .app-bhim .app-icon{ background:linear-gradient(135deg,#00558c,#f7941d); }
 
   .note{
     font-size:13px;
@@ -641,6 +672,7 @@
   .tier-card.custom-card button:active, .upi-row button:active{
     transform:scale(0.95);
   }
+  .app-btn:active .app-icon{ transform:scale(0.9); }
 
   @media (max-width:480px){
     .hero h1{ font-size:34px; }
@@ -737,9 +769,28 @@
       <span>rzriarz@icici</span>
       <button id="copyBtn">Copy</button>
     </div>
-    <a id="phonepeLink" class="pay-btn phonepe-btn" href="#">Pay with PhonePe</a>
-    <a id="payLink" class="pay-btn-secondary" href="#">Or pay with any other UPI app</a>
-    <p class="note">Works with GPay, Paytm, BHIM & any UPI app</p>
+    <a id="payLink" class="pay-btn" href="#">Pay via UPI app</a>
+
+    <p class="app-row-label">Or pay directly with</p>
+    <div class="app-row">
+      <a class="app-btn app-phonepe" id="phonepeLink" href="#">
+        <span class="app-icon">Pe</span>
+        <span class="app-name">PhonePe</span>
+      </a>
+      <a class="app-btn app-gpay" id="gpayLink" href="#">
+        <span class="app-icon">G</span>
+        <span class="app-name">GPay</span>
+      </a>
+      <a class="app-btn app-paytm" id="paytmLink" href="#">
+        <span class="app-icon">Pa</span>
+        <span class="app-name">Paytm</span>
+      </a>
+      <a class="app-btn app-bhim" id="bhimLink" href="#">
+        <span class="app-icon">B</span>
+        <span class="app-name">BHIM</span>
+      </a>
+    </div>
+    <p class="note">App buttons open that app directly (Android). On iPhone, use "Pay via UPI app" or scan the QR.</p>
   </div>
 </section>
 
@@ -796,7 +847,6 @@
   const payAmountEl = document.getElementById('payAmount');
   const qrImg = document.getElementById('qrImg');
   const payLink = document.getElementById('payLink');
-  const phonepeLink = document.getElementById('phonepeLink');
   const customInput = document.getElementById('customAmount');
   const customBtn = document.getElementById('customBtn');
   const copyBtn = document.getElementById('copyBtn');
@@ -856,19 +906,26 @@
 
   const isAndroid = /Android/i.test(navigator.userAgent);
 
+  const APPS = {
+    phonepe: { link: document.getElementById('phonepeLink'), pkg: 'com.phonepe.app' },
+    gpay: { link: document.getElementById('gpayLink'), pkg: 'com.google.android.apps.nbu.paisa.user' },
+    paytm: { link: document.getElementById('paytmLink'), pkg: 'net.one97.paytm' },
+    bhim: { link: document.getElementById('bhimLink'), pkg: 'in.org.npci.upiapp' }
+  };
+
   function buildUpiUri(amount){
     const note = encodeURIComponent('Chai support - buymechai.co.in');
     return `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${amount}&cu=INR&tn=${note}`;
   }
 
-  // on Android, target the PhonePe app directly so it opens instead of
-  // whatever app happens to be the device's default UPI link handler
-  function buildPhonePeUri(amount){
+  // on Android, target the app's package directly via an intent:// link so it
+  // opens that exact app instead of whatever the device's default UPI handler is
+  function buildAppIntentUri(amount, pkg){
     const genericUri = buildUpiUri(amount);
     if(!isAndroid) return genericUri;
     const params = genericUri.split('?')[1];
-    const fallback = encodeURIComponent('https://play.google.com/store/apps/details?id=com.phonepe.app');
-    return `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${fallback};end`;
+    const fallback = encodeURIComponent(`https://play.google.com/store/apps/details?id=${pkg}`);
+    return `intent://pay?${params}#Intent;scheme=upi;package=${pkg};S.browser_fallback_url=${fallback};end`;
   }
 
   function setAmount(amount, cardEl, opts = {}){
@@ -877,7 +934,9 @@
     const uri = buildUpiUri(amount);
     qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(uri)}`;
     payLink.href = uri;
-    phonepeLink.href = buildPhonePeUri(amount);
+    Object.values(APPS).forEach(app => {
+      app.link.href = buildAppIntentUri(amount, app.pkg);
+    });
 
     cards.forEach(c => c.classList.remove('selected'));
     if(cardEl){
