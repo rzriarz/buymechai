@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy Me Chai ☕ | Support Open-Source Hardware & Firmware</title>
+<meta name="description" content="Support my open-source 3D printables, firmware and hardware projects with a chai. Every rupee keeps the midnight builds coming.">
+<meta name="theme-color" content="#A9683D">
+
+<meta property="og:title" content="Buy Me Chai ☕">
+<meta property="og:description" content="I share free & open-source 3D printables, firmware and hardware. Buy me a chai to fuel the next build!">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.buymechai.co.in">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#FFF8ED;
+    --cream-dark:#FFEFD8;
+    --chai:#A9683D;
+    --chai-dark:#7A4A24;
+    --accent:#FF9F45;
+    --accent-pink:#FF6F91;
+    --text-dark:#4A2E1D;
+    --white:#FFFFFF;
+    --shadow: 0 10px 25px rgba(122,74,36,0.15);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    font-family:'Quicksand', sans-serif;
+    background: linear-gradient(180deg, var(--cream) 0%, var(--cream-dark) 100%);
+    color:var(--text-dark);
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* floating background blobs */
+  .blob{
+    position:fixed;
+    border-radius:50%;
+    opacity:0.25;
+    filter:blur(10px);
+    z-index:0;
+    animation: float 12s ease-in-out infinite;
+  }
+  .blob1{ width:220px; height:220px; background:var(--accent); top:-60px; left:-60px; animation-delay:0s; }
+  .blob2{ width:180px; height:180px; background:var(--accent-pink); bottom:10%; right:-70px; animation-delay:2s; }
+  .blob3{ width:140px; height:140px; background:var(--chai); top:40%; left:-50px; animation-delay:4s; }
+
+  @keyframes float{
+    0%,100%{ transform:translateY(0) translateX(0); }
+    50%{ transform:translateY(-25px) translateX(15px); }
+  }
+
+  header, section, footer{ position:relative; z-index:1; }
+
+  /* HERO */
+  .hero{
+    text-align:center;
+    padding:64px 20px 40px;
+  }
+
+  .cup-wrap{
+    position:relative;
+    display:inline-block;
+    font-size:80px;
+    line-height:1;
+  }
+
+  .steam{
+    position:absolute;
+    top:-28px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:22px;
+    opacity:0.6;
+    animation: steam 2.5s ease-in-out infinite;
+  }
+  .steam.s2{ left:38%; animation-delay:0.6s; font-size:16px;}
+  .steam.s3{ left:62%; animation-delay:1.2s; font-size:16px;}
+
+  @keyframes steam{
+    0%{ transform:translate(-50%,0) scale(1); opacity:0.6;}
+    50%{ transform:translate(-50%,-14px) scale(1.15); opacity:0.9;}
+    100%{ transform:translate(-50%,-28px) scale(0.9); opacity:0;}
+  }
+
+  .hero h1{
+    font-family:'Baloo 2', sans-serif;
+    font-size:44px;
+    color:var(--chai-dark);
+    margin-top:14px;
+  }
+
+  .hero p.tagline{
+    font-size:18px;
+    max-width:480px;
+    margin:12px auto 0;
+    color:var(--chai-dark);
+    opacity:0.85;
+  }
+
+  .hero .cta{
+    display:inline-block;
+    margin-top:26px;
+    background:var(--accent);
+    color:var(--white);
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    padding:14px 32px;
+    border-radius:50px;
+    text-decoration:none;
+    box-shadow:var(--shadow);
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hero .cta:hover{ transform:translateY(-3px) scale(1.03); box-shadow:0 14px 30px rgba(255,159,69,0.35); }
+
+  /* ABOUT */
+  .about{
+    max-width:640px;
+    margin:0 auto;
+    padding:20px 24px 10px;
+  }
+  .about-card{
+    background:var(--white);
+    border-radius:24px;
+    padding:28px 26px;
+    box-shadow:var(--shadow);
+    text-align:center;
+  }
+  .about-card h2{
+    font-family:'Baloo 2', sans-serif;
+    color:var(--chai-dark);
+    font-size:24px;
+    margin-bottom:12px;
+  }
+  .about-card p{
+    font-size:16px;
+    line-height:1.65;
+    margin-bottom:10px;
+    color:#5c4530;
+  }
+  .about-card p:last-child{ margin-bottom:0; }
+  .about-emojis{ font-size:22px; margin:6px 0 14px; }
+
+  /* TIERS */
+  .tiers{
+    max-width:900px;
+    margin:0 auto;
+    padding:48px 20px 10px;
+    text-align:center;
+  }
+  .tiers h2{
+    font-family:'Baloo 2', sans-serif;
+    font-size:28px;
+    color:var(--chai-dark);
+    margin-bottom:8px;
+  }
+  .tiers .sub{
+    color:#7A5A3D;
+    margin-bottom:28px;
+    font-size:15px;
+  }
+
+  .tier-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+    gap:16px;
+  }
+
+  .tier-card{
+    background:var(--white);
+    border:3px solid transparent;
+    border-radius:20px;
+    padding:22px 14px;
+    cursor:pointer;
+    box-shadow:var(--shadow);
+    transition:transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family:'Quicksand', sans-serif;
+    text-align:center;
+  }
+  .tier-card:hover{ transform:translateY(-5px) scale(1.02); }
+  .tier-card.selected{
+    border-color:var(--accent);
+    box-shadow:0 14px 28px rgba(255,159,69,0.3);
+  }
+  .tier-card .emoji{ font-size:34px; display:block; margin-bottom:8px; }
+  .tier-card .amount{
+    font-family:'Baloo 2', sans-serif;
+    font-size:22px;
+    color:var(--chai-dark);
+    font-weight:700;
+  }
+  .tier-card .label{
+    font-size:13px;
+    color:#8a6a4a;
+    margin-top:4px;
+    display:block;
+  }
+
+  .tier-card.custom-card{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:8px;
+    cursor:default;
+  }
+  .tier-card.custom-card .emoji{ margin-bottom:2px; }
+  .tier-card.custom-card input{
+    width:100%;
+    border:2px solid var(--cream-dark);
+    border-radius:12px;
+    padding:8px 10px;
+    font-family:'Quicksand', sans-serif;
+    font-size:15px;
+    text-align:center;
+    outline:none;
+    color:var(--text-dark);
+  }
+  .tier-card.custom-card input:focus{ border-color:var(--accent); }
+  .tier-card.custom-card button{
+    background:var(--chai);
+    color:var(--white);
+    border:none;
+    border-radius:12px;
+    padding:9px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+    transition:background 0.2s ease;
+  }
+  .tier-card.custom-card button:hover{ background:var(--chai-dark); }
+
+  /* PAY SECTION */
+  .pay-section{
+    max-width:420px;
+    margin:56px auto 0;
+    padding:0 20px 60px;
+    text-align:center;
+  }
+  .pay-card{
+    background:var(--white);
+    border-radius:28px;
+    padding:30px 26px 34px;
+    box-shadow:var(--shadow);
+  }
+  .pay-card h2{
+    font-family:'Baloo 2', sans-serif;
+    color:var(--chai-dark);
+    font-size:24px;
+    margin-bottom:4px;
+  }
+  .pay-card .pay-sub{
+    font-size:14px;
+    color:#8a6a4a;
+    margin-bottom:18px;
+  }
+
+  .qr-wrap{
+    background:var(--cream);
+    border-radius:20px;
+    padding:14px;
+    display:inline-block;
+    margin-bottom:16px;
+  }
+  .qr-wrap img{
+    width:200px;
+    height:200px;
+    display:block;
+    border-radius:10px;
+  }
+
+  .upi-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    background:var(--cream);
+    border-radius:14px;
+    padding:10px 14px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .upi-row span{ font-weight:600; color:var(--chai-dark); font-size:15px; }
+  .upi-row button{
+    background:var(--accent-pink);
+    color:var(--white);
+    border:none;
+    border-radius:10px;
+    padding:6px 14px;
+    font-family:'Baloo 2', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background 0.2s ease;
+  }
+  .upi-row button:hover{ background:#e85c7c; }
+
+  .pay-btn{
+    display:block;
+    background:linear-gradient(135deg, var(--accent), var(--accent-pink));
+    color:var(--white);
+    text-decoration:none;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:18px;
+    padding:16px;
+    border-radius:16px;
+    box-shadow:0 12px 26px rgba(255,111,145,0.3);
+    transition:transform 0.2s ease;
+  }
+  .pay-btn:hover{ transform:translateY(-3px) scale(1.02); }
+
+  .note{
+    font-size:13px;
+    color:#9c7f60;
+    margin-top:14px;
+  }
+
+  /* FOOTER */
+  footer{
+    text-align:center;
+    padding:26px 20px 40px;
+    color:#8a6a4a;
+    font-size:14px;
+  }
+  footer .domain{ font-weight:600; color:var(--chai-dark); }
+
+  .toast{
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--chai-dark);
+    color:var(--white);
+    padding:10px 20px;
+    border-radius:30px;
+    font-size:14px;
+    opacity:0;
+    pointer-events:none;
+    transition:all 0.3s ease;
+    z-index:10;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width:480px){
+    .hero h1{ font-size:34px; }
+    .cup-wrap{ font-size:64px; }
+    .about-card{ padding:22px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+
+<header class="hero">
+  <div class="cup-wrap">
+    <span class="steam s1">〜</span>
+    <span class="steam s2">〜</span>
+    <span class="steam s3">〜</span>
+    ☕
+  </div>
+  <h1>Buy Me a Chai</h1>
+  <p class="tagline">Fuel my midnight builds with a warm cup of chai</p>
+  <a href="#tiers" class="cta">Buy me a chai →</a>
+</header>
+
+<section class="about">
+  <div class="about-card">
+    <div class="about-emojis">🛠️ 🖨️ 🔧 💻</div>
+    <h2>Hey, I'm an engineer!</h2>
+    <p>I design and share <strong>open-source & free 3D printables, firmware and hardware</strong> for anyone to use, remix and build on — no strings attached.</p>
+    <p>Most of this happens after hours, fuelled by chai and stubbornness. If something I made ever saved you time or money, consider buying me a chai — it helps me stay up a little longer to ship the next one.</p>
+  </div>
+</section>
+
+<section class="tiers" id="tiers">
+  <h2>Pick your chai</h2>
+  <p class="sub">One tap, pay via any UPI app 🇮🇳</p>
+  <div class="tier-grid">
+    <div class="tier-card" data-amount="39" data-label="Ek Chai">
+      <span class="emoji">☕</span>
+      <span class="amount">₹39</span>
+      <span class="label">Ek Chai</span>
+    </div>
+    <div class="tier-card" data-amount="49" data-label="Chai + Pyaar">
+      <span class="emoji">💛</span>
+      <span class="amount">₹49</span>
+      <span class="label">Chai + Pyaar</span>
+    </div>
+    <div class="tier-card" data-amount="99" data-label="Chai for a friend">
+      <span class="emoji">🫶</span>
+      <span class="amount">₹99</span>
+      <span class="label">Chai for a Friend</span>
+    </div>
+    <div class="tier-card" data-amount="299" data-label="Chai + Snack">
+      <span class="emoji">🍪</span>
+      <span class="amount">₹299</span>
+      <span class="label">Chai + Snack</span>
+    </div>
+    <div class="tier-card" data-amount="499" data-label="Chai + Dosa">
+      <span class="emoji">🥞</span>
+      <span class="amount">₹499</span>
+      <span class="label">Chai + Dosa</span>
+    </div>
+    <div class="tier-card" data-amount="999" data-label="Chai + Biryani">
+      <span class="emoji">🍛</span>
+      <span class="amount">₹999</span>
+      <span class="label">Chai + Biryani</span>
+    </div>
+    <div class="tier-card custom-card">
+      <span class="emoji">✨</span>
+      <input type="number" id="customAmount" placeholder="Custom ₹" min="1">
+      <button id="customBtn">Support</button>
+    </div>
+  </div>
+</section>
+
+<section class="pay-section">
+  <div class="pay-card">
+    <h2>Scan & Pay</h2>
+    <p class="pay-sub">Supporting with <strong>₹<span id="payAmount">39</span></strong></p>
+    <div class="qr-wrap">
+      <img id="qrImg" alt="UPI QR code">
+    </div>
+    <div class="upi-row">
+      <span>rzriarz@icici</span>
+      <button id="copyBtn">Copy</button>
+    </div>
+    <a id="payLink" class="pay-btn" href="#">Pay via UPI app</a>
+    <p class="note">Works with GPay, PhonePe, Paytm & any UPI app</p>
+  </div>
+</section>
+
+<footer>
+  <p>Made with ☕ and 🫶 for the open-source community</p>
+  <p class="domain">www.buymechai.co.in</p>
+</footer>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+  const UPI_ID = 'rzriarz@icici';
+  const PAYEE_NAME = 'Buy Me Chai';
+  const cards = document.querySelectorAll('.tier-card[data-amount]');
+  const payAmountEl = document.getElementById('payAmount');
+  const qrImg = document.getElementById('qrImg');
+  const payLink = document.getElementById('payLink');
+  const customInput = document.getElementById('customAmount');
+  const customBtn = document.getElementById('customBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const toast = document.getElementById('toast');
+
+  function buildUpiUri(amount){
+    const note = encodeURIComponent('Chai support - buymechai.co.in');
+    return `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${amount}&cu=INR&tn=${note}`;
+  }
+
+  function setAmount(amount, cardEl){
+    if(!amount || amount <= 0) return;
+    payAmountEl.textContent = amount;
+    const uri = buildUpiUri(amount);
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(uri)}`;
+    payLink.href = uri;
+
+    cards.forEach(c => c.classList.remove('selected'));
+    if(cardEl) cardEl.classList.add('selected');
+
+    document.querySelector('.pay-section').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      setAmount(card.dataset.amount, card);
+    });
+  });
+
+  customBtn.addEventListener('click', () => {
+    const val = parseInt(customInput.value, 10);
+    if(val > 0){
+      setAmount(val, null);
+    } else {
+      customInput.focus();
+    }
+  });
+
+  customInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') customBtn.click();
+  });
+
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(UPI_ID).then(() => {
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    });
+  });
+
+  // default state
+  setAmount(39, cards[0]);
+</script>
+
+</body>
+</html>
