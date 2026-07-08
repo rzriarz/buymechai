@@ -911,10 +911,10 @@
   // developer community sources, not officially guaranteed by each company.
   // BHIM has no confirmed iOS scheme, so it falls back to the generic link there.
   const APPS = {
-    phonepe: { link: document.getElementById('phonepeLink'), pkg: 'com.phonepe.app', iosScheme: 'phonepe' },
-    gpay: { link: document.getElementById('gpayLink'), pkg: 'com.google.android.apps.nbu.paisa.user', iosScheme: 'gpay' },
-    paytm: { link: document.getElementById('paytmLink'), pkg: 'net.one97.paytm', iosScheme: 'paytmmp' },
-    bhim: { link: document.getElementById('bhimLink'), pkg: 'in.org.npci.upiapp', iosScheme: null }
+    phonepe: { link: document.getElementById('phonepeLink'), name: 'PhonePe', pkg: 'com.phonepe.app', iosScheme: 'phonepe' },
+    gpay: { link: document.getElementById('gpayLink'), name: 'Google Pay', pkg: 'com.google.android.apps.nbu.paisa.user', iosScheme: 'gpay' },
+    paytm: { link: document.getElementById('paytmLink'), name: 'Paytm', pkg: 'net.one97.paytm', iosScheme: 'paytmmp' },
+    bhim: { link: document.getElementById('bhimLink'), name: 'BHIM', pkg: 'in.org.npci.upiapp', iosScheme: null }
   };
 
   function buildUpiUri(amount){
@@ -925,20 +925,41 @@
   // Android: target the app's package directly via an intent:// link so it opens
   // that exact app instead of whatever the device's default UPI handler is.
   // iOS: try the app's own branded scheme (separate from the shared "upi" scheme
-  // that another app may have claimed), falling back to the generic link.
+  // that another app may have claimed). Neither includes a forced Play
+  // Store/App Store fallback here on purpose: if the app isn't installed, the
+  // click handler below falls back to the generic UPI link instead, so the
+  // visitor can still pay with whatever app they actually have.
   function buildAppUri(amount, app){
     const genericUri = buildUpiUri(amount);
     const params = genericUri.split('?')[1];
 
     if(isAndroid){
-      const fallback = encodeURIComponent(`https://play.google.com/store/apps/details?id=${app.pkg}`);
-      return `intent://pay?${params}#Intent;scheme=upi;package=${app.pkg};S.browser_fallback_url=${fallback};end`;
+      return `intent://pay?${params}#Intent;scheme=upi;package=${app.pkg};end`;
     }
     if(isIOS && app.iosScheme){
       return `${app.iosScheme}://pay?${params}`;
     }
     return genericUri;
   }
+
+  // if tapping an app-specific link doesn't hand off to another app within
+  // ~1.5s, assume it isn't installed and fall back to the generic UPI link
+  Object.values(APPS).forEach(app => {
+    app.link.addEventListener('click', () => {
+      const genericUri = buildUpiUri(payAmountEl.textContent);
+      setTimeout(() => {
+        if(document.visibilityState !== 'hidden'){
+          toast.textContent = `Couldn't open ${app.name}, trying your UPI app instead`;
+          toast.classList.add('show');
+          window.location.href = genericUri;
+          setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => { toast.textContent = 'Copied!'; }, 300);
+          }, 2000);
+        }
+      }, 1500);
+    });
+  });
 
   function setAmount(amount, cardEl, opts = {}){
     if(!amount || amount <= 0) return;
