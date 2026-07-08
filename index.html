@@ -97,8 +97,43 @@
   .hero h1{
     font-family:'Baloo 2', sans-serif;
     font-size:44px;
-    color:var(--chai-dark);
     margin-top:14px;
+    background:linear-gradient(90deg, var(--chai-dark), var(--accent), var(--accent-pink), var(--chai-dark));
+    background-size:300% auto;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation: shimmer 6s linear infinite;
+  }
+  @keyframes shimmer{
+    0%{ background-position:0% 50%; }
+    100%{ background-position:300% 50%; }
+  }
+
+  /* scroll reveal */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  /* floating doodles */
+  .doodle{
+    position:fixed;
+    font-size:22px;
+    opacity:0.35;
+    z-index:0;
+    pointer-events:none;
+    animation: doodleDrift 9s ease-in-out infinite;
+  }
+  .doodle.d1{ top:14%; left:8%; animation-delay:0s; font-size:26px; }
+  .doodle.d2{ top:65%; right:10%; animation-delay:2.5s; font-size:20px; }
+  .doodle.d3{ top:30%; right:20%; animation-delay:5s; font-size:18px; }
+  .doodle.d4{ top:80%; left:16%; animation-delay:1.5s; font-size:22px; }
+  @keyframes doodleDrift{
+    0%,100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-30px) rotate(12deg); }
   }
 
   .hero p.tagline{
@@ -418,6 +453,102 @@
     margin-top:14px;
   }
 
+  /* MESSAGE NOTE */
+  .message-section{
+    max-width:460px;
+    margin:40px auto 0;
+    padding:0 20px;
+    text-align:center;
+  }
+  .message-card{
+    background:var(--white);
+    border-radius:26px;
+    padding:28px 24px 30px;
+    box-shadow:var(--shadow);
+  }
+  .message-card h2{
+    font-family:'Baloo 2', sans-serif;
+    color:var(--chai-dark);
+    font-size:22px;
+    margin-bottom:4px;
+  }
+  .message-card .sub{
+    font-size:14px;
+    color:#8a6a4a;
+    margin-bottom:18px;
+  }
+  .message-form{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .message-form input[type="text"],
+  .message-form textarea{
+    width:100%;
+    border:2px solid var(--cream-dark);
+    border-radius:14px;
+    padding:11px 14px;
+    font-family:'Quicksand', sans-serif;
+    font-size:15px;
+    color:var(--text-dark);
+    outline:none;
+    resize:none;
+    transition:border-color 0.2s ease;
+  }
+  .message-form input[type="text"]:focus,
+  .message-form textarea:focus{ border-color:var(--accent); }
+  .message-form input[type="text"]:disabled{ background:var(--cream); opacity:0.6; }
+
+  .anon-toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:14px;
+    color:#7A5A3D;
+    cursor:pointer;
+    justify-content:center;
+  }
+  .anon-toggle input{ width:16px; height:16px; accent-color:var(--accent-pink); cursor:pointer; }
+
+  .message-form button{
+    background:linear-gradient(135deg, var(--accent), var(--accent-pink));
+    color:var(--white);
+    border:none;
+    border-radius:14px;
+    padding:13px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    box-shadow:0 10px 22px rgba(255,111,145,0.28);
+    transition:transform 0.2s ease;
+  }
+  .message-form button:hover{ transform:translateY(-2px) scale(1.02); }
+
+  .latest-message{
+    margin-top:22px;
+    background:var(--cream);
+    border-radius:18px;
+    padding:16px 18px;
+    text-align:left;
+    animation: noteIn 0.45s ease;
+  }
+  @keyframes noteIn{
+    0%{ opacity:0; transform:translateY(14px) scale(0.96); }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  .latest-label{
+    font-family:'Baloo 2', sans-serif;
+    font-size:13px;
+    color:var(--accent-pink);
+    font-weight:700;
+    margin-bottom:6px;
+    letter-spacing:0.02em;
+  }
+  .latest-text{ font-size:15px; color:var(--text-dark); line-height:1.5; }
+  .latest-text .who{ font-weight:700; color:var(--chai-dark); }
+  .latest-note{ font-size:12px; color:#a5876a; margin-top:8px; }
+
   /* CONNECT */
   .connect{
     max-width:420px;
@@ -488,6 +619,13 @@
   }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
+  /* gentle press feedback, placed last so it wins over the :hover rules above */
+  .cta:active, .tier-card:active, .pay-btn:active,
+  .social-btn:active, .message-form button:active,
+  .tier-card.custom-card button:active, .upi-row button:active{
+    transform:scale(0.95);
+  }
+
   @media (max-width:480px){
     .hero h1{ font-size:34px; }
     .cup-wrap{ font-size:64px; }
@@ -500,6 +638,11 @@
 <div class="blob blob1"></div>
 <div class="blob blob2"></div>
 <div class="blob blob3"></div>
+
+<span class="doodle d1">🍃</span>
+<span class="doodle d2">✨</span>
+<span class="doodle d3">☕</span>
+<span class="doodle d4">💛</span>
 
 <header class="hero">
   <div class="cup-wrap" id="cupWrap" title="tap me ☺">
@@ -515,17 +658,17 @@
 </header>
 
 <section class="about">
-  <div class="about-card">
+  <div class="about-card reveal">
     <div class="about-emojis">🛠️ 🖨️ 🔧 💻</div>
     <h2>Hi, I'm Riyas 👋</h2>
     <p class="about-role">Engineer by day · chai-powered maker by night ⚙️☕</p>
-    <p>I spend my nights turning ideas into <strong>free, open-source 3D printables, firmware & hardware</strong> — for anyone to download, remix, and make their own. No paywalls, no catches, just stuff I wish existed when I was starting out.</p>
-    <p>Every project here runs on curiosity, caffeine and a few too many sleepless nights. If something I built ever saved you time, money or a headache — a chai goes a long way in keeping the soldering iron (and me) awake a little longer 🔥☕</p>
-    <p class="signature">— Riyas</p>
+    <p>I spend my nights turning ideas into <strong>free, open-source 3D printables, firmware & hardware</strong>, for anyone to download, remix, and make their own. No paywalls, no catches, just stuff I wish existed when I was starting out.</p>
+    <p>Every project here runs on curiosity, caffeine and a few too many sleepless nights. If something I built ever saved you time, money or a headache, a chai goes a long way in keeping the soldering iron (and me) awake a little longer 🔥☕</p>
+    <p class="signature">Yours in chai, Riyas</p>
   </div>
 </section>
 
-<section class="tiers" id="tiers">
+<section class="tiers reveal" id="tiers">
   <h2>Pick your chai</h2>
   <p class="sub">One tap, pay via any UPI app 🇮🇳</p>
   <div class="tier-grid">
@@ -567,7 +710,7 @@
   </div>
 </section>
 
-<section class="pay-section">
+<section class="pay-section reveal">
   <div class="pay-card">
     <h2>Scan & Pay</h2>
     <p class="pay-sub">Supporting with <strong>₹<span id="payAmount">39</span></strong></p>
@@ -583,7 +726,28 @@
   </div>
 </section>
 
-<section class="connect">
+<section class="message-section reveal">
+  <div class="message-card">
+    <h2>Leave a little note ☕💌</h2>
+    <p class="sub">Say hi, share what you built, or just say thanks. Totally optional.</p>
+    <div class="message-form">
+      <input type="text" id="supporterName" placeholder="Your name (optional)" maxlength="40">
+      <label class="anon-toggle">
+        <input type="checkbox" id="anonToggle">
+        Stay anonymous
+      </label>
+      <textarea id="supporterMsg" placeholder="Your message (optional)" rows="3" maxlength="200"></textarea>
+      <button id="msgSubmit">Send with a smile 💛</button>
+    </div>
+    <div class="latest-message" id="latestMessage" style="display:none;">
+      <p class="latest-label">YOUR LATEST NOTE</p>
+      <p class="latest-text"><span class="who" id="latestName"></span><span id="latestMsgWrap"></span></p>
+      <p class="latest-note">💾 saved on this device only</p>
+    </div>
+  </div>
+</section>
+
+<section class="connect reveal">
   <h2>Say hi 👋</h2>
   <p class="sub">Questions, ideas, or just want to talk hardware?</p>
   <div class="social-row">
@@ -628,7 +792,7 @@
     'Fuel my midnight builds with a warm cup of chai',
     'One chai = one more hour of soldering ☕🔧',
     'Powering open-source, one sip at a time',
-    'Free 3D prints, firmware & love — chai keeps it going'
+    'Free 3D prints, firmware and love, chai keeps it going'
   ];
   let taglineIndex = 0;
   setInterval(() => {
@@ -729,6 +893,72 @@
 
   // default state (no scroll/confetti on initial load)
   setAmount(39, cards[0], { silent: true });
+
+  // scroll-reveal for sections
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // leave-a-note feature (saved to this browser only)
+  const NOTE_KEY = 'buymechai_latest_note';
+  const nameInput = document.getElementById('supporterName');
+  const anonToggle = document.getElementById('anonToggle');
+  const msgInput = document.getElementById('supporterMsg');
+  const msgSubmit = document.getElementById('msgSubmit');
+  const latestMessage = document.getElementById('latestMessage');
+  const latestName = document.getElementById('latestName');
+  const latestMsgWrap = document.getElementById('latestMsgWrap');
+
+  function renderNote(note){
+    latestName.textContent = note.name;
+    latestMsgWrap.textContent = note.message ? `: ${note.message}` : ' sent a chai your way ☕';
+    latestMessage.style.display = 'block';
+  }
+
+  const savedNote = localStorage.getItem(NOTE_KEY);
+  if(savedNote){
+    try{ renderNote(JSON.parse(savedNote)); } catch(e){}
+  }
+
+  anonToggle.addEventListener('change', () => {
+    nameInput.disabled = anonToggle.checked;
+  });
+
+  msgSubmit.addEventListener('click', () => {
+    const isAnon = anonToggle.checked;
+    const name = isAnon ? 'Anonymous' : (nameInput.value.trim() || 'Anonymous');
+    const message = msgInput.value.trim();
+    const note = { name, message, time: Date.now() };
+
+    localStorage.setItem(NOTE_KEY, JSON.stringify(note));
+    renderNote(note);
+
+    latestMessage.style.animation = 'none';
+    void latestMessage.offsetWidth;
+    latestMessage.style.animation = '';
+
+    const rect = msgSubmit.getBoundingClientRect();
+    spawnParticles(rect.left + rect.width / 2, rect.top, ['💌','💛','✨']);
+
+    nameInput.value = '';
+    msgInput.value = '';
+    anonToggle.checked = false;
+    nameInput.disabled = false;
+
+    toast.textContent = 'Thanks for the note! 💛';
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => { toast.textContent = 'Copied!'; }, 300);
+    }, 1500);
+  });
 </script>
 
 </body>
