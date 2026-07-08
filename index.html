@@ -447,6 +447,22 @@
   }
   .pay-btn:hover{ transform:translateY(-3px) scale(1.02); }
 
+  .phonepe-btn{
+    background:linear-gradient(135deg, #5f259f, #8a3ffc);
+    box-shadow:0 12px 26px rgba(95,37,159,0.35);
+  }
+
+  .pay-btn-secondary{
+    display:block;
+    margin-top:12px;
+    font-size:14px;
+    color:var(--chai-dark);
+    text-decoration:underline;
+    opacity:0.8;
+    transition:opacity 0.2s ease;
+  }
+  .pay-btn-secondary:hover{ opacity:1; }
+
   .note{
     font-size:13px;
     color:#9c7f60;
@@ -721,8 +737,9 @@
       <span>rzriarz@icici</span>
       <button id="copyBtn">Copy</button>
     </div>
-    <a id="payLink" class="pay-btn" href="#">Pay via UPI app</a>
-    <p class="note">Works with GPay, PhonePe, Paytm & any UPI app</p>
+    <a id="phonepeLink" class="pay-btn phonepe-btn" href="#">Pay with PhonePe</a>
+    <a id="payLink" class="pay-btn-secondary" href="#">Or pay with any other UPI app</a>
+    <p class="note">Works with GPay, Paytm, BHIM & any UPI app</p>
   </div>
 </section>
 
@@ -779,6 +796,7 @@
   const payAmountEl = document.getElementById('payAmount');
   const qrImg = document.getElementById('qrImg');
   const payLink = document.getElementById('payLink');
+  const phonepeLink = document.getElementById('phonepeLink');
   const customInput = document.getElementById('customAmount');
   const customBtn = document.getElementById('customBtn');
   const copyBtn = document.getElementById('copyBtn');
@@ -836,9 +854,21 @@
     }
   });
 
+  const isAndroid = /Android/i.test(navigator.userAgent);
+
   function buildUpiUri(amount){
     const note = encodeURIComponent('Chai support - buymechai.co.in');
     return `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${amount}&cu=INR&tn=${note}`;
+  }
+
+  // on Android, target the PhonePe app directly so it opens instead of
+  // whatever app happens to be the device's default UPI link handler
+  function buildPhonePeUri(amount){
+    const genericUri = buildUpiUri(amount);
+    if(!isAndroid) return genericUri;
+    const params = genericUri.split('?')[1];
+    const fallback = encodeURIComponent('https://play.google.com/store/apps/details?id=com.phonepe.app');
+    return `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${fallback};end`;
   }
 
   function setAmount(amount, cardEl, opts = {}){
@@ -847,6 +877,7 @@
     const uri = buildUpiUri(amount);
     qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(uri)}`;
     payLink.href = uri;
+    phonepeLink.href = buildPhonePeUri(amount);
 
     cards.forEach(c => c.classList.remove('selected'));
     if(cardEl){
